@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code チートシート (日本語)</title>
+<style>
+:root {
+  --bg: #f8f7f4;
+  --bg-panel: #ffffff;
+  --border: #e2ddd6;
+  --border-light: #ede9e2;
+  --text: #1a1a18;
+  --text-muted: #6b6860;
+  --text-dim: #9e9b96;
+  --mono: 'Courier New', Courier, monospace;
+  --sans: system-ui, -apple-system, sans-serif;
+
+  --blue-bg: #ddeeff;
+  --blue-fg: #0a3d6b;
+  --purple-bg: #ebe9fd;
+  --purple-fg: #3a2f8a;
+  --orange-bg: #fde8cc;
+  --orange-fg: #6b3500;
+  --teal-bg: #d4f0e8;
+  --teal-fg: #0a4a3a;
+  --green-bg: #e2f0d0;
+  --green-fg: #2a520a;
+  --coral-bg: #fce0d8;
+  --coral-fg: #7a2a10;
+  --gray-bg: #ededea;
+  --gray-fg: #3a3a38;
+  --pink-bg: #fde0ec;
+  --pink-fg: #7a1a40;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--sans);
+  font-size: 12px;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  padding: 8px;
+}
+
+@media (max-width: 960px) { .layout { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px)  { .layout { grid-template-columns: 1fr; } }
+
+.span2 { grid-column: span 2; }
+
+/* ===== TITLE ===== */
+.page-title {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 12px;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.02em;
+}
+
+/* ===== PANEL (card) ===== */
+.panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.panel-head {
+  padding: 5px 9px;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.panel-body { padding: 6px 9px; }
+
+/* head color variants */
+.ph-blue   { background: var(--blue-bg);   color: var(--blue-fg); }
+.ph-purple { background: var(--purple-bg); color: var(--purple-fg); }
+.ph-orange { background: var(--orange-bg); color: var(--orange-fg); }
+.ph-teal   { background: var(--teal-bg);   color: var(--teal-fg); }
+.ph-green  { background: var(--green-bg);  color: var(--green-fg); }
+.ph-coral  { background: var(--coral-bg);  color: var(--coral-fg); }
+.ph-gray   { background: var(--gray-bg);   color: var(--gray-fg); }
+.ph-pink   { background: var(--pink-bg);   color: var(--pink-fg); }
+
+/* ===== SECTION TITLE ===== */
+.sec {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin: 7px 0 3px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid var(--border-light);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ===== ROW ===== */
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 4px;
+  padding: 1px 0;
+}
+
+/* ===== KEY ===== */
+.keys { display: flex; gap: 2px; flex-shrink: 0; }
+.key {
+  background: #f0ede8;
+  border: 1px solid #c8c4bc;
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  padding: 0 4px;
+  font-size: 10px;
+  font-family: var(--mono);
+  white-space: nowrap;
+  color: var(--text);
+}
+
+/* ===== COMMAND / MONO ===== */
+.cmd {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: #1060a8;
+  flex-shrink: 0;
+}
+
+.mono {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text);
+  flex-shrink: 0;
+}
+
+/* ===== DESC ===== */
+.desc {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: right;
+  flex: 1;
+}
+
+.note {
+  font-size: 10px;
+  color: var(--text-dim);
+  padding: 1px 0;
+}
+
+/* ===== BADGE ===== */
+.badge {
+  font-size: 9px;
+  background: var(--orange-bg);
+  color: var(--orange-fg);
+  padding: 0 3px;
+  border-radius: 2px;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+/* ===== CODE BLOCK ===== */
+.codeblock {
+  background: #f3f1ec;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 5px 7px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text);
+  margin: 4px 0;
+  white-space: pre;
+  overflow-x: auto;
+  line-height: 1.6;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  grid-column: 1 / -1;
+  background: var(--gray-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 7px 12px;
+  font-size: 10px;
+  color: var(--text-muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  align-items: center;
+}
+
+.footer a { color: #1060a8; text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<div class="page-title">Claude Code チートシート (日本語) — 公式ドキュメント準拠版 <span style="font-size:12px;font-weight:400;color:var(--text-muted)">2026/04/02 時点</span></div>
+
+<!-- ===== 1. キーボードショートカット ===== -->
+<div class="panel">
+  <div class="panel-head ph-blue">⌨ キーボードショートカット</div>
+  <div class="panel-body">
+
+    <div class="sec">基本操作</div>
+    <div class="row"><span class="keys"><span class="key">Ctrl</span><span class="key">C</span></span><span class="desc">入力・生成をキャンセル</span></div>
+    <div class="row"><span class="keys"><span class="key">Ctrl</span><span class="key">D</span></span><span class="desc">セッションを終了</span></div>
+    <div class="row"><span class="keys"><span class="key">Ctrl</span><span class="key">L</span></span><span class="desc">画面クリア（履歴保持）</span></div>
+    <div class="row"><span class="keys"><span class="key">Ctrl</span><span class="key">O</span></span><span class="desc">詳細/トランスクリプト切替</span></div>
+    <div class="row"><span class="keys"><span class="key">Ctrl</span><span class="key">R</span></span><span class="desc">コマンド履歴を逆順検索</span></div>
+    <div class="row"><span class="keys"><span class="key">Ctrl</span><span class="key">T</span></span><span class="desc">タスクリスト表示切替</span></div>
+    <div class="row"><span class="keys"><span class="key">Ctrl</span><span class="key">B</span></span><span class="desc">バックグラウンドでタスク実行</span></div>
+    <div class="row"><span class="keys"><span class="key">Ctrl</span><span class="key">X</span><span class="key">Ctrl</span><span class="key">K</span></span><span class="desc">バックグラウンドエージェントを停止 <span class="badge">NEW</span></span></div>
+    <div class="row"><span class="keys"><span class="key">Ctrl</span><span class="key">G</span></span><span class="desc">デフォルトエディタで開く</span></div>
+    <div class="row"><span class="keys"><span class="key">Ctrl</span><span class="key">X</span><span class="key">Ctrl</span><span class="key">E</span></span><span class="desc">エディタで開く（別名）</span></div>
+    <div class="row"><span class="keys"><span class="key">Ctrl</span><span class="key">V</span></span><span class="desc">クリップボードから画像貼り付け</span></div>
+    <div class="row"><span class="keys"><span class="key">Esc</span><span class="key">Esc</span></span><span class="desc">巻き戻し / 要約</span></div>
+
+    <div class="sec">テキスト編集</div>
+    <div class="row"><span class="keys"><span class="key">Ctrl</span><span class="key">K</span></span><span class="desc">カーソル〜行末を削除</span></div>
+    <div class="row"><span class="keys"><span class="key">Ctrl</span><span class="key">U</span></span><span class="desc">行頭〜カーソルを削除</span></div>
+    <div class="row"><span class="keys"><span class="key">Ctrl</span><span class="key">Y</span></span><span class="desc">削除テキストを貼り付け</span></div>
+    <div class="row"><span class="keys"><span class="key">Alt</span><span class="key">Y</span></span><span class="desc">貼り付け履歴をサイクル</span></div>
+    <div class="row"><span class="keys"><span class="key">Alt</span><span class="key">B</span></span><span class="desc">1単語戻る</span></div>
+    <div class="row"><span class="keys"><span class="key">Alt</span><span class="key">F</span></span><span class="desc">1単語進む</span></div>
+
+    <div class="sec">モード切替</div>
+    <div class="row"><span class="keys"><span class="key">Shift</span><span class="key">Tab</span></span><span class="desc">パーミッションモードを循環</span></div>
+    <div class="row"><span class="keys"><span class="key">Alt</span><span class="key">M</span></span><span class="desc">パーミッションモードを循環（別名）</span></div>
+    <div class="row"><span class="keys"><span class="key">Alt</span><span class="key">P</span></span><span class="desc">モデルを切替</span></div>
+    <div class="row"><span class="keys"><span class="key">Alt</span><span class="key">T</span></span><span class="desc">拡張思考（thinking）を切替</span></div>
+    <div class="row"><span class="keys"><span class="key">Alt</span><span class="key">O</span></span><span class="desc">Fastモードを切替 <span class="badge">NEW</span></span></div>
+
+    <div class="sec">マルチライン入力</div>
+    <div class="row"><span class="keys"><span class="key">\</span><span class="key">Enter</span></span><span class="desc">改行（全ターミナル共通）</span></div>
+    <div class="row"><span class="keys"><span class="key">Ctrl</span><span class="key">J</span></span><span class="desc">改行（制御シーケンス）</span></div>
+    <div class="row"><span class="keys"><span class="key">Option</span><span class="key">Enter</span></span><span class="desc">改行（macOS デフォルト）</span></div>
+    <div class="row"><span class="keys"><span class="key">Shift</span><span class="key">Enter</span></span><span class="desc">改行（iTerm2 / WezTerm / Kitty）</span></div>
+
+    <div class="sec">プレフィックス</div>
+    <div class="row"><span class="keys"><span class="key">/</span></span><span class="desc">スラッシュコマンド</span></div>
+    <div class="row"><span class="keys"><span class="key">!</span></span><span class="desc">Bash 直接実行</span></div>
+    <div class="row"><span class="keys"><span class="key">@</span></span><span class="desc">ファイルパス補完・参照</span></div>
+
+    <div class="sec">トランスクリプト (Ctrl+O)</div>
+    <div class="row"><span class="keys"><span class="key">/</span></span><span class="desc">トランスクリプト内検索 <span class="badge">NEW</span></span></div>
+    <div class="row"><span class="keys"><span class="key">N</span></span><span class="desc">次の一致</span></div>
+    <div class="row"><span class="keys"><span class="key">Shift</span><span class="key">N</span></span><span class="desc">前の一致</span></div>
+    <div class="row"><span class="keys"><span class="key">Q</span></span><span class="desc">トランスクリプトを閉じる</span></div>
+
+    <div class="sec">セッションピッカー</div>
+    <div class="row"><span class="keys"><span class="key">↑</span><span class="key">↓</span></span><span class="desc">ナビゲート</span></div>
+    <div class="row"><span class="keys"><span class="key">←</span><span class="key">→</span></span><span class="desc">展開 / 折りたたみ</span></div>
+    <div class="row"><span class="keys"><span class="key">P</span></span><span class="desc">プレビュー</span></div>
+    <div class="row"><span class="keys"><span class="key">R</span></span><span class="desc">リネーム</span></div>
+    <div class="row"><span class="keys"><span class="key">A</span></span><span class="desc">全プロジェクト表示</span></div>
+    <div class="row"><span class="keys"><span class="key">B</span></span><span class="desc">現在ブランチのみ</span></div>
+
+  </div>
+</div>
+
+<!-- ===== 2. スラッシュコマンド ===== -->
+<div class="panel">
+  <div class="panel-head ph-purple">⚡ スラッシュコマンド</div>
+  <div class="panel-body">
+
+    <div class="sec">セッション</div>
+    <div class="row"><span class="cmd">/clear</span><span class="desc">会話をクリア (/reset /new)</span></div>
+    <div class="row"><span class="cmd">/compact [focus]</span><span class="desc">フォーカス指定でコンテキスト圧縮</span></div>
+    <div class="row"><span class="cmd">/resume [session]</span><span class="desc">セッションを再開 (/continue)</span></div>
+    <div class="row"><span class="cmd">/rename [name]</span><span class="desc">セッションをリネーム</span></div>
+    <div class="row"><span class="cmd">/branch [name]</span><span class="desc">会話をブランチ (/fork)</span></div>
+    <div class="row"><span class="cmd">/rewind</span><span class="desc">前の時点に巻き戻し (/checkpoint)</span></div>
+    <div class="row"><span class="cmd">/export [filename]</span><span class="desc">会話をテキストにエクスポート</span></div>
+    <div class="row"><span class="cmd">/copy [N]</span><span class="desc">最後（N番目）の返答をコピー</span></div>
+    <div class="row"><span class="cmd">/cost</span><span class="desc">トークン使用統計</span></div>
+    <div class="row"><span class="cmd">/context</span><span class="desc">コンテキスト使用量を可視化</span></div>
+    <div class="row"><span class="cmd">/diff</span><span class="desc">未コミット変更を表示</span></div>
+
+    <div class="sec">設定</div>
+    <div class="row"><span class="cmd">/config</span><span class="desc">設定インターフェースを開く (/settings)</span></div>
+    <div class="row"><span class="cmd">/model [model]</span><span class="desc">AIモデルを変更</span></div>
+    <div class="row"><span class="cmd">/fast [on|off]</span><span class="desc">Fastモードを切替</span></div>
+    <div class="row"><span class="cmd">/effort [level]</span><span class="desc">エフォートレベル設定 <span class="badge">NEW</span></span></div>
+    <div class="row"><span class="cmd">/vim</span><span class="desc">Vim / Normal 編集モードを切替</span></div>
+    <div class="row"><span class="cmd">/theme</span><span class="desc">カラーテーマを変更</span></div>
+    <div class="row"><span class="cmd">/color [color]</span><span class="desc">プロンプトバーの色を設定</span></div>
+    <div class="row"><span class="cmd">/permissions</span><span class="desc">ツールパーミッションルールを管理</span></div>
+    <div class="row"><span class="cmd">/keybindings</span><span class="desc">キーバインディング設定ファイルを開く</span></div>
+    <div class="row"><span class="cmd">/terminal-setup</span><span class="desc">ターミナルキーバインドを設定</span></div>
+
+    <div class="sec">ツール</div>
+    <div class="row"><span class="cmd">/init</span><span class="desc">CLAUDE.md を生成しプロジェクト初期化</span></div>
+    <div class="row"><span class="cmd">/memory</span><span class="desc">CLAUDE.md・自動メモリを管理</span></div>
+    <div class="row"><span class="cmd">/mcp</span><span class="desc">MCP サーバー接続を管理</span></div>
+    <div class="row"><span class="cmd">/hooks</span><span class="desc">フック設定を表示</span></div>
+    <div class="row"><span class="cmd">/skills</span><span class="desc">利用可能なスキル一覧</span></div>
+    <div class="row"><span class="cmd">/agents</span><span class="desc">エージェント設定を管理</span></div>
+    <div class="row"><span class="cmd">/add-dir &lt;path&gt;</span><span class="desc">作業ディレクトリを追加</span></div>
+    <div class="row"><span class="cmd">/chrome</span><span class="desc">Chrome 統合を設定</span></div>
+    <div class="row"><span class="cmd">/plugin</span><span class="desc">Claude Code プラグインを管理</span></div>
+    <div class="row"><span class="cmd">/reload-plugins</span><span class="desc">プラグインをリロード</span></div>
+    <div class="row"><span class="cmd">/ide</span><span class="desc">IDE 統合を管理</span></div>
+
+    <div class="sec">ユーティリティ</div>
+    <div class="row"><span class="cmd">/btw &lt;question&gt;</span><span class="desc">コンテキスト非消費のサイド質問</span></div>
+    <div class="row"><span class="cmd">/plan [desc]</span><span class="desc">プランモードに直接進入</span></div>
+    <div class="row"><span class="cmd">/voice</span><span class="desc">プッシュトゥトーク音声入力を切替</span></div>
+    <div class="row"><span class="cmd">/doctor</span><span class="desc">インストール・設定を診断</span></div>
+    <div class="row"><span class="cmd">/pr-comments [PR]</span><span class="desc">GitHub PR コメントを取得</span></div>
+    <div class="row"><span class="cmd">/schedule</span><span class="desc">クラウドスケジュールタスクを管理</span></div>
+    <div class="row"><span class="cmd">/security-review</span><span class="desc">変更のセキュリティ分析</span></div>
+    <div class="row"><span class="cmd">/remote-control</span><span class="desc">リモートコントロールを有効化 (/rc) <span class="badge">NEW</span></span></div>
+    <div class="row"><span class="cmd">/stats</span><span class="desc">日次使用量・streak を可視化</span></div>
+    <div class="row"><span class="cmd">/insights</span><span class="desc">セッション分析レポート</span></div>
+    <div class="row"><span class="cmd">/usage</span><span class="desc">プラン制限・レート制限を確認</span></div>
+    <div class="row"><span class="cmd">/desktop</span><span class="desc">デスクトップアプリで続行 (/app)</span></div>
+    <div class="row"><span class="cmd">/status</span><span class="desc">バージョン・モデル・アカウント表示</span></div>
+    <div class="row"><span class="cmd">/help</span><span class="desc">ヘルプとコマンド一覧</span></div>
+    <div class="row"><span class="cmd">/feedback</span><span class="desc">フィードバック送信 (/bug)</span></div>
+    <div class="row"><span class="cmd">/release-notes</span><span class="desc">完全な変更履歴を表示</span></div>
+
+  </div>
+</div>
+
+<!-- ===== 3. CLI コマンドとフラグ ===== -->
+<div class="panel">
+  <div class="panel-head ph-orange">$ CLI コマンドとフラグ</div>
+  <div class="panel-body">
+
+    <div class="sec">基本コマンド</div>
+    <div class="row"><span class="cmd">claude</span><span class="desc">インタラクティブセッション開始</span></div>
+    <div class="row"><span class="cmd">claude "query"</span><span class="desc">初期プロンプト付きで開始</span></div>
+    <div class="row"><span class="cmd">claude -p "query"</span><span class="desc">非対話型 SDK モード</span></div>
+    <div class="row"><span class="cmd">claude -c</span><span class="desc">最新の会話を続行</span></div>
+    <div class="row"><span class="cmd">claude -r "name"</span><span class="desc">名前/IDでセッション再開</span></div>
+    <div class="row"><span class="cmd">cat f | claude -p "q"</span><span class="desc">パイプ入力を処理</span></div>
+    <div class="row"><span class="cmd">claude update</span><span class="desc">最新版に更新</span></div>
+
+    <div class="sec">認証</div>
+    <div class="row"><span class="cmd">claude auth login</span><span class="desc">Anthropic アカウントにサインイン</span></div>
+    <div class="row"><span class="cmd">claude auth logout</span><span class="desc">ログアウト</span></div>
+    <div class="row"><span class="cmd">claude auth status</span><span class="desc">認証ステータスを確認</span></div>
+
+    <div class="sec">モデル・モード</div>
+    <div class="row"><span class="mono">--model &lt;model&gt;</span><span class="desc">使用モデルを指定</span></div>
+    <div class="row"><span class="mono">--permission-mode &lt;mode&gt;</span><span class="desc">パーミッションモードで起動</span></div>
+    <div class="row"><span class="mono">--effort [low|med|high|max]</span><span class="desc">エフォートレベルを設定</span></div>
+    <div class="row"><span class="mono">--enable-auto-mode</span><span class="desc">オートモード有効化（Team/Ent）</span></div>
+
+    <div class="sec">入出力</div>
+    <div class="row"><span class="mono">--output-format json</span><span class="desc">JSON 形式で出力</span></div>
+    <div class="row"><span class="mono">--output-format stream-json</span><span class="desc">ストリーミング JSON で出力</span></div>
+    <div class="row"><span class="mono">--input-format stream-json</span><span class="desc">ストリーミング JSON を入力</span></div>
+    <div class="row"><span class="mono">--max-turns &lt;n&gt;</span><span class="desc">エージェントターン数を制限</span></div>
+    <div class="row"><span class="mono">--max-budget-usd &lt;n&gt;</span><span class="desc">API 支出上限を設定</span></div>
+
+    <div class="sec">ツール制御</div>
+    <div class="row"><span class="mono">--allowedTools "Bash" "Read"</span><span class="desc">許可ツールを指定</span></div>
+    <div class="row"><span class="mono">--disallowedTools "Edit"</span><span class="desc">禁止ツールを指定</span></div>
+    <div class="row"><span class="mono">--dangerously-skip-permissions</span><span class="desc">確認をスキップ（注意）</span></div>
+
+    <div class="sec">プロンプト・設定</div>
+    <div class="row"><span class="mono">--system-prompt "text"</span><span class="desc">システムプロンプトを置換</span></div>
+    <div class="row"><span class="mono">--append-system-prompt "text"</span><span class="desc">システムプロンプトに追記</span></div>
+    <div class="row"><span class="mono">--add-dir &lt;path&gt;</span><span class="desc">作業ディレクトリを追加</span></div>
+    <div class="row"><span class="mono">--mcp-config &lt;file&gt;</span><span class="desc">MCP サーバー設定を読み込み</span></div>
+    <div class="row"><span class="mono">--settings &lt;path|json&gt;</span><span class="desc">設定を読み込み</span></div>
+
+    <div class="sec">ワークツリー・セッション</div>
+    <div class="row"><span class="mono">--worktree / -w [name]</span><span class="desc">Git worktree で開始</span></div>
+    <div class="row"><span class="mono">-w name --tmux</span><span class="desc">worktree に tmux セッション作成</span></div>
+    <div class="row"><span class="mono">--fork-session</span><span class="desc">再開時に新 ID で分岐</span></div>
+    <div class="row"><span class="mono">--no-session-persistence</span><span class="desc">セッション永続化を無効化</span></div>
+    <div class="row"><span class="mono">-n "name"</span><span class="desc">セッション表示名を設定</span></div>
+
+    <div class="sec">デバッグ・その他</div>
+    <div class="row"><span class="mono">--debug [categories]</span><span class="desc">デバッグモードを有効化</span></div>
+    <div class="row"><span class="mono">--verbose</span><span class="desc">詳細ログを有効化</span></div>
+    <div class="row"><span class="mono">--bare</span><span class="desc">最小モード（hooks/skills スキップ）</span></div>
+    <div class="row"><span class="mono">--version / -v</span><span class="desc">バージョンを表示</span></div>
+    <div class="row"><span class="mono">--remote "desc"</span><span class="desc">Web セッションを作成</span></div>
+    <div class="row"><span class="mono">--remote-control / --rc</span><span class="desc">リモートコントロールを有効化 <span class="badge">NEW</span></span></div>
+
+  </div>
+</div>
+
+<!-- ===== 4. ワークフローとヒント ===== -->
+<div class="panel">
+  <div class="panel-head ph-teal">💡 ワークフローとヒント</div>
+  <div class="panel-body">
+
+    <div class="sec">プランモード</div>
+    <div class="row"><span class="keys"><span class="key">Shift</span><span class="key">Tab</span></span><span class="desc">通常 → 自動承認 → プランモード</span></div>
+    <div class="row"><span class="mono">--permission-mode plan</span><span class="desc">プランモードで起動</span></div>
+    <div class="note">プランモード中はファイル編集・コマンド実行がブロックされる</div>
+
+    <div class="sec">思考とエフォート</div>
+    <div class="row"><span class="keys"><span class="key">Alt</span><span class="key">T</span></span><span class="desc">拡張思考をオン/オフ</span></div>
+    <div class="row"><span class="mono">"ultrathink"</span><span class="desc">そのターンの最大エフォートで思考</span></div>
+    <div class="row"><span class="mono">/effort low|medium|high|max</span><span class="desc">○ 低 · ◐ 中 · ● 高 · ★ 最大</span></div>
+
+    <div class="sec">Git Worktree 並列作業</div>
+    <div class="row"><span class="mono">claude -w feature-name</span><span class="desc">独立ブランチで作業</span></div>
+    <div class="row"><span class="mono">claude -w name --tmux</span><span class="desc">tmux セッション付きで作業</span></div>
+    <div class="row"><span class="mono">/batch &lt;instruction&gt;</span><span class="desc">大規模変更を並列 worktree で実行</span></div>
+    <div class="note">isolation: worktree でエージェントを専用ツリーで分離</div>
+
+    <div class="sec">コンテキスト管理</div>
+    <div class="row"><span class="cmd">/context</span><span class="desc">使用量と最適化ヒントを表示</span></div>
+    <div class="row"><span class="cmd">/compact [focus]</span><span class="desc">フォーカス指定で圧縮</span></div>
+    <div class="note">容量 ~95% で自動圧縮。CLAUDE.md は圧縮後も保持</div>
+    <div class="note">Opus 4.6 (Max/Team/Ent): 最大 1M コンテキスト</div>
+
+    <div class="sec">セッション管理</div>
+    <div class="row"><span class="mono">claude -c</span><span class="desc">直前の会話を続ける</span></div>
+    <div class="row"><span class="mono">claude -r "session-name"</span><span class="desc">名前でセッションを再開</span></div>
+    <div class="row"><span class="cmd">/btw question</span><span class="desc">コンテキスト消費なしの質問</span></div>
+
+    <div class="sec">SDK / ヘッドレス実行</div>
+    <div class="row"><span class="mono">claude -p "query"</span><span class="desc">非インタラクティブ実行</span></div>
+    <div class="row"><span class="mono">--output-format json</span><span class="desc">構造化出力</span></div>
+    <div class="row"><span class="mono">--max-budget-usd 5.00</span><span class="desc">API コスト上限を設定</span></div>
+    <div class="row"><span class="mono">cat file | claude -p "q"</span><span class="desc">パイプ入力を処理</span></div>
+    <div class="row"><span class="mono">--json-schema '{ ... }'</span><span class="desc">JSON スキーマで出力を検証</span></div>
+
+    <div class="sec">スケジューリング・リモート</div>
+    <div class="row"><span class="cmd">/loop 5m message</span><span class="desc">5分ごとに定期タスクを実行</span></div>
+    <div class="row"><span class="cmd">/schedule</span><span class="desc">クラウドスケジュールタスクを管理</span></div>
+    <div class="row"><span class="mono">--remote "Fix login bug"</span><span class="desc">claude.ai でウェブセッションを作成</span></div>
+    <div class="row"><span class="cmd">/rc</span><span class="desc">リモートコントロール接続</span></div>
+
+    <div class="sec">音声入力</div>
+    <div class="row"><span class="cmd">/voice</span><span class="desc">プッシュトゥトークを有効化</span></div>
+    <div class="row"><span class="keys"><span class="key">Space</span>（長押し）</span><span class="desc">録音、離すと送信</span></div>
+    <div class="note">20言語対応: 日本語・英語・スペイン語・フランス語・ドイツ語 他</div>
+
+  </div>
+</div>
+
+<!-- ===== 5. フック設定 ===== -->
+<div class="panel">
+  <div class="panel-head ph-green">🔗 フック設定 (Hooks)</div>
+  <div class="panel-body">
+
+    <div class="sec">フックイベント一覧</div>
+    <div class="row"><span class="cmd">SessionStart</span><span class="desc">セッション開始・再開・クリア時</span></div>
+    <div class="row"><span class="cmd">UserPromptSubmit</span><span class="desc">ユーザープロンプト送信時</span></div>
+    <div class="row"><span class="cmd">PreToolUse</span><span class="desc">ツール実行前（ブロック可）</span></div>
+    <div class="row"><span class="cmd">PermissionRequest</span><span class="desc">パーミッション確認時</span></div>
+    <div class="row"><span class="cmd">PermissionDenied</span><span class="desc">オートモードで拒否時</span></div>
+    <div class="row"><span class="cmd">PostToolUse</span><span class="desc">ツール実行成功後</span></div>
+    <div class="row"><span class="cmd">PostToolUseFailure</span><span class="desc">ツール実行失敗後</span></div>
+    <div class="row"><span class="cmd">Notification</span><span class="desc">通知送信時</span></div>
+    <div class="row"><span class="cmd">Stop</span><span class="desc">Claude が応答終了時</span></div>
+    <div class="row"><span class="cmd">StopFailure</span><span class="desc">APIエラーで終了時</span></div>
+    <div class="row"><span class="cmd">SubagentStart / Stop</span><span class="desc">サブエージェント起動・終了時</span></div>
+    <div class="row"><span class="cmd">TaskCreated / Completed</span><span class="desc">タスク作成・完了時</span></div>
+    <div class="row"><span class="cmd">PreCompact / PostCompact</span><span class="desc">コンテキスト圧縮前後</span></div>
+    <div class="row"><span class="cmd">FileChanged</span><span class="desc">監視ファイル変更時</span></div>
+    <div class="row"><span class="cmd">WorktreeCreate / Remove</span><span class="desc">Worktree 作成・削除時</span></div>
+    <div class="row"><span class="cmd">InstructionsLoaded</span><span class="desc">CLAUDE.md 読み込み時</span></div>
+    <div class="row"><span class="cmd">ConfigChange</span><span class="desc">設定ファイル変更時</span></div>
+    <div class="row"><span class="cmd">CwdChanged</span><span class="desc">作業ディレクトリ変更時</span></div>
+    <div class="row"><span class="cmd">SessionEnd</span><span class="desc">セッション終了時</span></div>
+    <div class="row"><span class="cmd">Elicitation</span><span class="desc">MCP ツール入力要求時</span></div>
+
+    <div class="sec">フックタイプ</div>
+    <div class="row"><span class="mono">type: "command"</span><span class="desc">シェルコマンドを実行</span></div>
+    <div class="row"><span class="mono">type: "http"</span><span class="desc">外部エンドポイントに HTTP POST</span></div>
+    <div class="row"><span class="mono">type: "prompt"</span><span class="desc">LLM で単一ターン評価</span></div>
+    <div class="row"><span class="mono">type: "agent"</span><span class="desc">マルチターン検証（ツール使用可）</span></div>
+
+    <div class="sec">終了コード (command フック)</div>
+    <div class="row"><span class="mono">exit 0</span><span class="desc">操作を許可（stdout は構造化出力として解析）</span></div>
+    <div class="row"><span class="mono">exit 2</span><span class="desc">操作をブロック（stderr を Claude へフィードバック）</span></div>
+    <div class="row"><span class="mono">exit その他</span><span class="desc">操作を許可（stderr はログのみ）</span></div>
+
+    <div class="sec">設定例（PostToolUse + Prettier）</div>
+    <div class="codeblock">{
+  "hooks": {
+    "PostToolUse": [{
+      "matcher": "Edit|Write",
+      "hooks": [{
+        "type": "command",
+        "command": "npx prettier --write \
+$(jq -r '.tool_input.file_path')"
+      }]
+    }]
+  }
+}</div>
+
+  </div>
+</div>
+
+<!-- ===== 6. スキル ===== -->
+<div class="panel">
+  <div class="panel-head ph-coral">🛠 スキル (Skills)</div>
+  <div class="panel-body">
+
+    <div class="sec">ビルトインスキル</div>
+    <div class="row"><span class="cmd">/simplify [focus]</span><span class="desc">コードレビュー・品質改善（3並列）</span></div>
+    <div class="row"><span class="cmd">/batch &lt;instruction&gt;</span><span class="desc">大規模変更を並列 worktree で実行</span></div>
+    <div class="row"><span class="cmd">/debug [description]</span><span class="desc">デバッグログを有効化・診断</span></div>
+    <div class="row"><span class="cmd">/loop [interval] &lt;prompt&gt;</span><span class="desc">プロンプトを定期実行</span></div>
+    <div class="row"><span class="cmd">/claude-api</span><span class="desc">Claude API / SDK リファレンスを読み込み</span></div>
+
+    <div class="sec">スキルファイルの配置場所</div>
+    <div class="row"><span class="mono">~/.claude/skills/&lt;n&gt;/</span><span class="desc">個人スキル（全プロジェクト）</span></div>
+    <div class="row"><span class="mono">.claude/skills/&lt;n&gt;/</span><span class="desc">プロジェクトスキル</span></div>
+    <div class="row"><span class="mono">&lt;plugin&gt;/skills/&lt;n&gt;/</span><span class="desc">プラグインスキル</span></div>
+    <div class="note">各フォルダに SKILL.md を置く</div>
+
+    <div class="sec">SKILL.md frontmatter</div>
+    <div class="codeblock">---
+name: my-skill
+description: スキルの説明・使用場面
+argument-hint: [arg1] [arg2]
+allowed-tools: Read, Grep
+model: claude-sonnet-4-6
+effort: high
+context: fork        # サブエージェントで実行
+agent: Explore       # エージェント型
+user-invocable: false # Claudeのみ呼び出し可
+---</div>
+
+    <div class="sec">変数置換</div>
+    <div class="row"><span class="mono">$ARGUMENTS</span><span class="desc">すべての引数</span></div>
+    <div class="row"><span class="mono">$ARGUMENTS[N] / $N</span><span class="desc">N番目の引数</span></div>
+    <div class="row"><span class="mono">${CLAUDE_SESSION_ID}</span><span class="desc">セッション ID</span></div>
+    <div class="row"><span class="mono">${CLAUDE_SKILL_DIR}</span><span class="desc">スキルディレクトリのパス</span></div>
+
+    <div class="sec">ダイナミック挿入</div>
+    <div class="row"><span class="mono">!`command`</span><span class="desc">シェルコマンドの結果を挿入</span></div>
+
+  </div>
+</div>
+
+<!-- ===== 7. 設定ファイル ===== -->
+<div class="panel">
+  <div class="panel-head ph-gray">⚙ 設定ファイル (Settings)</div>
+  <div class="panel-body">
+
+    <div class="sec">設定スコープと優先順位（高→低）</div>
+    <div class="row"><span class="mono">1. Managed</span><span class="desc">サーバー管理（IT 強制適用）</span></div>
+    <div class="row"><span class="mono">2. CLI 引数</span><span class="desc">--settings などのフラグ</span></div>
+    <div class="row"><span class="mono">3. Local</span><span class="desc">.claude/settings.local.json（gitignored）</span></div>
+    <div class="row"><span class="mono">4. Project</span><span class="desc">.claude/settings.json（チーム共有）</span></div>
+    <div class="row"><span class="mono">5. User</span><span class="desc">~/.claude/settings.json（全プロジェクト）</span></div>
+
+    <div class="sec">設定ファイルのパス</div>
+    <div class="row"><span class="mono">~/.claude/settings.json</span><span class="desc">ユーザーグローバル設定</span></div>
+    <div class="row"><span class="mono">.claude/settings.json</span><span class="desc">プロジェクト設定（チーム共有）</span></div>
+    <div class="row"><span class="mono">.claude/settings.local.json</span><span class="desc">ローカル個人設定（gitignored）</span></div>
+    <div class="row"><span class="mono">~/.claude/keybindings.json</span><span class="desc">キーバインディング設定</span></div>
+
+    <div class="sec">CLAUDE.md の配置場所</div>
+    <div class="row"><span class="mono">CLAUDE.md</span><span class="desc">プロジェクトルート（チーム共有）</span></div>
+    <div class="row"><span class="mono">~/.claude/CLAUDE.md</span><span class="desc">グローバル個人設定</span></div>
+    <div class="row"><span class="mono">.claude/memory/</span><span class="desc">プロジェクトメモリ</span></div>
+    <div class="row"><span class="mono">.claude/rules/</span><span class="desc">追加ルール</span></div>
+
+    <div class="sec">主な settings.json キー</div>
+    <div class="row"><span class="mono">defaultModel</span><span class="desc">デフォルトモデル</span></div>
+    <div class="row"><span class="mono">defaultPermissionMode</span><span class="desc">デフォルトパーミッションモード</span></div>
+    <div class="row"><span class="mono">defaultEffort</span><span class="desc">デフォルトエフォートレベル</span></div>
+    <div class="row"><span class="mono">hooks</span><span class="desc">フック設定オブジェクト</span></div>
+    <div class="row"><span class="mono">permissions</span><span class="desc">ツールパーミッションルール</span></div>
+    <div class="row"><span class="mono">mcpServers</span><span class="desc">MCP サーバー設定</span></div>
+    <div class="row"><span class="mono">autoMemory</span><span class="desc">自動メモリ設定</span></div>
+    <div class="row"><span class="mono">disableAllHooks</span><span class="desc">全フックを無効化（true/false）</span></div>
+    <div class="row"><span class="mono">theme</span><span class="desc">カラーテーマ</span></div>
+    <div class="row"><span class="mono">plugins</span><span class="desc">プラグイン設定</span></div>
+    <div class="row"><span class="mono">skills</span><span class="desc">スキル設定</span></div>
+
+  </div>
+</div>
+
+<!-- ===== 8. パーミッションモードとモデル ===== -->
+<div class="panel">
+  <div class="panel-head ph-pink">🔐 パーミッションモードとモデル</div>
+  <div class="panel-body">
+
+    <div class="sec">パーミッションモード（Shift+Tab で循環）</div>
+    <div class="row"><span class="mono">default</span><span class="desc">各アクションを確認ダイアログで許可/拒否</span></div>
+    <div class="row"><span class="mono">acceptEdits</span><span class="desc">ファイル編集を自動許可</span></div>
+    <div class="row"><span class="mono">plan</span><span class="desc">プラン作成後に実装（ファイル変更はブロック）</span></div>
+    <div class="row"><span class="mono">auto</span><span class="desc">ルールに基づき自動判定（Team/Enterprise）</span></div>
+    <div class="row"><span class="mono">bypassPermissions</span><span class="desc">確認を全スキップ（要明示的許可）</span></div>
+
+    <div class="sec">モデル一覧</div>
+    <div class="row"><span class="mono">claude-opus-4-6</span><span class="desc">最高性能・高コスト（Opus 4.6）</span></div>
+    <div class="row"><span class="mono">claude-sonnet-4-6</span><span class="desc">バランス型・デフォルト推奨（Sonnet 4.6）</span></div>
+    <div class="row"><span class="mono">claude-haiku-4-5-20251001</span><span class="desc">高速・低コスト（Haiku 4.5）</span></div>
+    <div class="note">Fastモード: Opus 4.6 をそのまま高速出力（モデル変更なし）</div>
+
+    <div class="sec">エフォートレベル</div>
+    <div class="row"><span class="mono">low</span><span class="desc">○ 最小（シンプルなタスク向け）</span></div>
+    <div class="row"><span class="mono">medium</span><span class="desc">◐ 標準</span></div>
+    <div class="row"><span class="mono">high</span><span class="desc">● 高（複雑なタスク）</span></div>
+    <div class="row"><span class="mono">max</span><span class="desc">★ 最大（"ultrathink" 相当）</span></div>
+
+    <div class="sec">MCP (Model Context Protocol)</div>
+    <div class="row"><span class="cmd">/mcp</span><span class="desc">サーバー接続を管理・確認</span></div>
+    <div class="row"><span class="mono">--mcp-config &lt;file&gt;</span><span class="desc">設定ファイルから MCP 読み込み</span></div>
+    <div class="row"><span class="mono">--strict-mcp-config</span><span class="desc">指定ファイルのみ使用</span></div>
+    <div class="row"><span class="mono">--permission-prompt-tool</span><span class="desc">MCP ツールでパーミッション処理</span></div>
+
+    <div class="sec">IDE 統合</div>
+    <div class="row"><span class="cmd">/ide</span><span class="desc">IDE 統合を管理</span></div>
+    <div class="row"><span class="mono">--ide</span><span class="desc">IDE に自動接続</span></div>
+    <div class="note">VS Code / JetBrains 拡張機能で利用可能</div>
+
+    <div class="sec">利用例</div>
+    <div class="codeblock">
+# ログ分析
+tail -200 app.log | claude -p "異常を確認"
+
+# CI でセキュリティ確認
+git diff main --name-only | \
+  claude -p "セキュリティ問題を確認"
+
+# worktree で並列作業
+claude -w feature-auth --tmux
+</div>
+
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<div class="footer">
+  <span>情報源: <a href="https://docs.anthropic.com/ja/docs/claude-code/overview" target="_blank">Anthropic 公式ドキュメント</a></span>
+  <span>2026/04/02 時点の情報</span>
+  <span>ライセンス: MIT</span>
+  <span>内容は公式ドキュメントに基づき独自に作成</span>
+</div>
+
+</div>
+</body>
+</html>
